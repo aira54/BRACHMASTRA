@@ -10,6 +10,7 @@ $result = $conn->query($query);
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="../../asset/brachmastra.png">
     <title>Berita Perdata - BRACHMASTRA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
