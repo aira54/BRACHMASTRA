@@ -3,21 +3,30 @@ session_start();
 require 'db.php';
 
 $errors = [];
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email']);
     $pass  = $_POST['password'];
 
-    $stmt = $conn->prepare('SELECT id, name, password FROM users WHERE email = ? LIMIT 1');
+    $stmt = $conn->prepare('SELECT id, name, password, role FROM users WHERE email = ? LIMIT 1');
     $stmt->bind_param('s', $email);
     $stmt->execute();
     $result = $stmt->get_result();
     $user = $result->fetch_assoc();
 
     if ($user && password_verify($pass, $user['password'])) {
-        $_SESSION['user_id'] = $user['id'];
+        // simpan session
+        $_SESSION['user_id']   = $user['id'];
         $_SESSION['user_name'] = $user['name'];
-        header('Location: hukum.php');
-        exit;    
+        $_SESSION['role']      = $user['role'];
+
+        // redirect sesuai role
+        if ($user['role'] === 'admin') {
+            header('Location: admin/admin.php');
+        } else {
+            header('Location: hukum.php'); // untuk user biasa
+        }
+        exit;
     } else {
         $errors[] = 'Email atau password salah.';
     }
@@ -28,12 +37,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <link rel="icon" type="image/x-icon" href="asset/brachmastra.png">
+  <link rel="icon" type="image/x-icon" href="asset/brachmastra.png">
 <title>Login - BRACHMASTRA</title>
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-
-
 <body class="bg-gray-100">
 <div class="min-h-screen flex items-center justify-center p-4">
   <div class="bg-white w-full max-w-md p-6 rounded shadow">

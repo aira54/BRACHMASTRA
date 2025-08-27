@@ -1,6 +1,12 @@
 <?php
-// admin.php
+session_start();
 require '../db.php';
+
+// Cek apakah login sebagai admin
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+    header("Location: ../login.php");
+    exit;
+}
 
 // Hapus pengacara
 if (isset($_GET['hapus'])) {
@@ -18,31 +24,28 @@ if (isset($_GET['hapus_user'])) {
     exit;
 }
 ?>
-
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
   <title>Admin Panel - Pengacara & Registrasi</title>
-   <link rel="icon" type="image/x-icon" href="../asset/admin.png">
+  <link rel="icon" type="image/x-icon" href="../asset/admin.png">
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 text-gray-800">
   
-
 <nav class="bg-white shadow p-4 mb-6">
   <div class="max-w-6xl mx-auto flex justify-between items-center">
     <h1 class="text-xl font-bold text-blue-700">Admin Panel</h1>
     <a href="tambah-pengacara.php" class="text-blue-600 hover:underline">Tambah Pengacara</a>
-     <a href="admin-berita.php" class="text-blue-600 hover:underline">panel berita</a>
-       <a href="admin-toko-hukum.php" class="text-blue-600 hover:underline">panel toko</a>
-
+    <a href="admin-berita.php" class="text-blue-600 hover:underline">Panel Berita</a>
+    <a href="admin-toko-hukum.php" class="text-blue-600 hover:underline">Panel Toko</a>
   </div>
 </nav>
 
-  <div class="max-w-4xl mx-auto bg-white p-6 rounded shadow">
-    <h2 class="text-2xl font-bold mb-6 text-blue-700">data admin</h2>
+<div class="max-w-4xl mx-auto bg-white p-6 rounded shadow">
+  <h2 class="text-2xl font-bold mb-6 text-blue-700">Data Admin</h2>
+
 
  
  <!-- Data Pengacara -->
