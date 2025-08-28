@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 setTimeout(function () {
                     window.location.href = url;
-                }, 700); // Durasi loading 0.7 detik
+                }, 700);
             }
         });
     });
@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
   </div>
   
   <form method="GET" class="flex">
-    <input type="text" name="cari" value="<?php echo htmlspecialchars($cari); ?>" placeholder="Cari Layanan..." class="border rounded-l px-3 py-2 w-64 focus:outline-none">
+    <input type="text" name="cari" value="<?= htmlspecialchars($cari); ?>" placeholder="Cari Layanan..." class="border rounded-l px-3 py-2 w-64 focus:outline-none">
     <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 rounded-r">Cari</button>
   </form>
 </div>
@@ -127,11 +127,11 @@ document.addEventListener("DOMContentLoaded", function () {
         <h3 class="font-semibold mb-2">Sub Kategori</h3>
         <select name="sub_kategori" class="border rounded px-3 py-2 w-full">
           <option value="">Semua</option>
-          <option value="Pidana Umum" <?php if($sub_kategori=="Pidana Umum") echo "selected"; ?>>Pidana Umum</option>
-          <option value="Korupsi" <?php if($sub_kategori=="Korupsi") echo "selected"; ?>>Korupsi</option>
-          <option value="Narkotika" <?php if($sub_kategori=="Narkotika") echo "selected"; ?>>Narkotika</option>
-          <option value="Pembunuhan" <?php if($sub_kategori=="Pembunuhan") echo "selected"; ?>>Pembunuhan</option>
-          <option value="Pencurian" <?php if($sub_kategori=="Pencurian") echo "selected"; ?>>Pencurian</option>
+          <option value="Pidana Umum" <?= $sub_kategori=="Pidana Umum"?"selected":""; ?>>Pidana Umum</option>
+          <option value="Korupsi" <?= $sub_kategori=="Korupsi"?"selected":""; ?>>Korupsi</option>
+          <option value="Narkotika" <?= $sub_kategori=="Narkotika"?"selected":""; ?>>Narkotika</option>
+          <option value="Pembunuhan" <?= $sub_kategori=="Pembunuhan"?"selected":""; ?>>Pembunuhan</option>
+          <option value="Pencurian" <?= $sub_kategori=="Pencurian"?"selected":""; ?>>Pencurian</option>
         </select>
       </div>
 
@@ -139,9 +139,9 @@ document.addEventListener("DOMContentLoaded", function () {
         <h3 class="font-semibold mb-2">Lokasi</h3>
         <select name="lokasi" class="border rounded px-3 py-2 w-full">
           <option value="">Semua</option>
-          <option value="Jakarta" <?php if($lokasi=="Jakarta") echo "selected"; ?>>Jakarta</option>
-          <option value="Bandung" <?php if($lokasi=="Bandung") echo "selected"; ?>>Bandung</option>
-          <option value="Surabaya" <?php if($lokasi=="Surabaya") echo "selected"; ?>>Surabaya</option>
+          <option value="Jakarta" <?= $lokasi=="Jakarta"?"selected":""; ?>>Jakarta</option>
+          <option value="Bandung" <?= $lokasi=="Bandung"?"selected":""; ?>>Bandung</option>
+          <option value="Surabaya" <?= $lokasi=="Surabaya"?"selected":""; ?>>Surabaya</option>
         </select>
       </div>
 
@@ -151,29 +151,44 @@ document.addEventListener("DOMContentLoaded", function () {
 
   <!-- Daftar Toko Hukum -->
   <main class="md:col-span-3 space-y-4">
-    <h2 class="text-gray-600">Menampilkan <span class="text-blue-700 font-bold">
-      <?php echo $result->num_rows; ?>
-    </span> Layanan Hukum Pidana</h2>
+    <h2 class="text-gray-600">Menampilkan 
+      <span class="text-blue-700 font-bold">
+        <?= $result->num_rows; ?>
+      </span> Layanan Hukum Pidana
+    </h2>
 
-    <?php while($row = $result->fetch_assoc()): ?>
-    <div class="bg-white rounded shadow p-4 flex flex-col md:flex-row gap-4">
-     <img src="../../uploads/<?php echo $row['gambar']; ?>" 
-     alt="<?php echo $row['nama_produk']; ?>" 
-     class="w-full md:w-48 h-32 object-cover rounded">
+    <?php if ($result->num_rows > 0): ?>
+      <?php while($row = $result->fetch_assoc()): ?>
+      <div class="bg-white rounded shadow p-4 flex flex-col md:flex-row gap-4">
+        <img src="../../uploads/<?= htmlspecialchars($row['gambar']); ?>" 
+             alt="<?= htmlspecialchars($row['nama_produk']); ?>" 
+             class="w-full md:w-48 h-32 object-cover rounded">
 
-      <div class="flex flex-col justify-between flex-1">
-        <div>
-          <span class="text-blue-700 font-bold uppercase text-sm"><?php echo $row['sub_kategori']; ?> - <?php echo $row['lokasi']; ?></span>
-          <h3 class="font-bold text-lg"><?php echo $row['nama_produk']; ?></h3>
-          <p class="text-gray-700"><?php echo $row['deskripsi']; ?></p>
-        </div>
-        <div class="flex justify-between items-center mt-2">
-          <span class="text-blue-800 font-bold">Rp <?php echo number_format($row['harga'],0,',','.'); ?></span>
-          <a href="#" class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded">Lihat Layanan</a>
+        <div class="flex flex-col justify-between flex-1">
+          <div>
+            <span class="text-blue-700 font-bold uppercase text-sm">
+              <?= htmlspecialchars($row['sub_kategori']); ?> - <?= htmlspecialchars($row['lokasi']); ?>
+            </span>
+            <h3 class="font-bold text-lg"><?= htmlspecialchars($row['nama_produk']); ?></h3>
+            <p class="text-gray-700">
+              <?= substr(strip_tags($row['deskripsi']),0,120) ?>...
+            </p>
+          </div>
+          <div class="flex justify-between items-center mt-2">
+            <span class="text-blue-800 font-bold">
+              Rp <?= number_format($row['harga'],0,',','.'); ?>
+            </span>
+            <a href="../../detail-toko.php?id=<?= $row['id']; ?>&from=pidana" 
+               class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded">
+              Lihat Layanan
+            </a>
+          </div>
         </div>
       </div>
-    </div>
-    <?php endwhile; ?>
+      <?php endwhile; ?>
+    <?php else: ?>
+      <p class="text-gray-500">Tidak ada layanan pidana ditemukan.</p>
+    <?php endif; ?>
   </main>
 
 </div>

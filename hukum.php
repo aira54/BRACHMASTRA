@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="id">
 
@@ -8,34 +9,15 @@
   <link rel="icon" type="image/x-icon" href="asset/brachmastra.png">
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  
   <style>
     body { font-family: 'Poppins', sans-serif; }
-    #page-loader {
-      display: none;
-      position: fixed;
-      z-index: 9999;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(255, 255, 255, 0.9);
-      justify-content: center;
-      align-items: center;
-    }
-    .scale-icon {
-      width: 80px;
-      height: 80px;
-      animation: swing 1s ease-in-out infinite;
-    }
-    @keyframes swing {
-      0%   { transform: rotate(-10deg); }
-      50%  { transform: rotate(10deg); }
-      100% { transform: rotate(-10deg); }
-    }
+    #page-loader { display: none; position: fixed; z-index: 9999; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); justify-content: center; align-items: center; }
+    .scale-icon { width: 80px; height: 80px; animation: swing 1s ease-in-out infinite; }
+    @keyframes swing { 0% { transform: rotate(-10deg); } 50% { transform: rotate(10deg);} 100% { transform: rotate(-10deg);} }
   </style>
 </head>
 
 <body class="bg-white text-gray-800">
-<?php session_start(); ?>
 
 <!-- Loader -->
 <div id="page-loader">
@@ -58,22 +40,37 @@
 </div>
 
 <!-- Navbar -->
-<nav class="bg-white shadow-md sticky top-0 z-50">
-  <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row md:justify-between md:items-center">
-    <a href="hukum.php" class="text-xl font-semibold text-blue-700">BRACHMASTRA</a>
-    <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6 mt-2 md:mt-0">
-      <a href="hukum.php" class="text-gray-700 hover:text-blue-700">Beranda</a>
-      <a href="pengacara.php" class="text-gray-700 hover:text-blue-700">Pengacara</a>
-      <a href="konsultasi.php" class="text-gray-700 hover:text-blue-700">Konsultasi</a>
-       <a href="tentang-kami.html" class="text-gray-700 hover:text-blue-700">Tentang Kami</a>
+<nav class="bg-white shadow p-4">
+  <div class="max-w-7xl mx-auto flex justify-between items-center">
+    
+    <!-- Kiri: Logo / Brand -->
+    <div class="flex items-center space-x-8">
+      <a href="hukum.php" class="text-lg font-bold text-blue-700">BRACHMASTRA</a>
+      <a href="hukum.php" class="text-gray-700 hover:text-blue-600">Beranda</a>
+      <a href="pengacara.php" class="text-gray-700 hover:text-blue-600">Pengacara</a>
+      <a href="konsultasi.php" class="text-gray-700 hover:text-blue-600">Konsultasi</a>
+      <a href="tentang-kami.html" class="text-gray-700 hover:text-blue-600">Tentang Kami</a>
+    </div>
+
+    <!-- Kanan: User Info -->
+    <div class="flex items-center space-x-4">
       <?php if (isset($_SESSION['user_id'])): ?>
-        <a href="logout.php" class="text-white bg-red-600 px-4 py-2 rounded hover:bg-red-700">Logout</a>
+        <?php if ($_SESSION['role'] === 'admin'): ?>
+          <a href="admin/admin.php" class="bg-yellow-500 text-white px-3 py-1 rounded text-sm hover:bg-yellow-600">Admin Panel</a>
+        <?php endif; ?>
+        
+        <span class="text-sm text-gray-600">Halo, <span class="font-semibold"><?= htmlspecialchars($_SESSION['user_name']) ?></span></span>
+        <a href="logout.php" class="bg-red-500 text-white text-sm px-3 py-1 rounded hover:bg-red-600 transition">Logout</a>
       <?php else: ?>
-        <a href="login.php" class="text-white bg-blue-700 px-4 py-2 rounded-lg hover:bg-blue-800">Login</a>
+        <a href="login.php" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700">Login</a>
       <?php endif; ?>
     </div>
+
   </div>
 </nav>
+
+
+
 
 <!-- =============================== -->
 <!-- Seluruh isi halaman kamu tetap -->

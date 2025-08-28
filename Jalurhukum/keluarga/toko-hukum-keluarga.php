@@ -50,14 +50,11 @@ $result = $conn->query($sql);
     justify-content: center;
     align-items: center;
 }
-
-/* Animasi goyang timbangan */
 .scale-icon {
     width: 80px;
     height: 80px;
     animation: swing 1s ease-in-out infinite;
 }
-
 @keyframes swing {
     0%   { transform: rotate(-10deg); }
     50%  { transform: rotate(10deg); }
@@ -77,27 +74,18 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll("a").forEach(function (link) {
         link.addEventListener("click", function (e) {
             const url = this.getAttribute("href");
-
-            if (
-                url &&
-                url !== "#" &&
-                !url.startsWith("javascript:") &&
-                !this.target &&
-                this.host === window.location.host &&
-                e.button === 0 &&
-                !e.ctrlKey && !e.metaKey
-            ) {
+            if (url && url !== "#" && !url.startsWith("javascript:") &&
+                !this.target && this.host === window.location.host &&
+                e.button === 0 && !e.ctrlKey && !e.metaKey) {
                 e.preventDefault();
                 document.getElementById("page-loader").style.display = "flex";
-
-                setTimeout(function () {
-                    window.location.href = url;
-                }, 700); // Durasi loading 0.7 detik
+                setTimeout(function () { window.location.href = url; }, 700);
             }
         });
     });
 });
 </script>
+
 <body class="bg-gray-50">
 
 <!-- Header -->
@@ -106,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function () {
     <a href="keluarga.php" class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded">
       ← Kembali
     </a>
-    <h1 class="text-xl font-bold text-blue-800">Toko Hukum - keluarga</h1>
+    <h1 class="text-xl font-bold text-blue-800">Toko Hukum - Keluarga</h1>
   </div>
   
   <form method="GET" class="flex">
@@ -127,11 +115,11 @@ document.addEventListener("DOMContentLoaded", function () {
         <h3 class="font-semibold mb-2">Sub Kategori</h3>
         <select name="sub_kategori" class="border rounded px-3 py-2 w-full">
           <option value="">Semua</option>
-          <option value="keluarga Umum" <?php if($sub_kategori=="Perdata Umum") echo "selected"; ?>>keluarga Umum</option>
-          <option value="Korupsi" <?php if($sub_kategori=="Korupsi") echo "selected"; ?>>Korupsi</option>
-          <option value="Narkotika" <?php if($sub_kategori=="Narkotika") echo "selected"; ?>>Narkotika</option>
-          <option value="Pembunuhan" <?php if($sub_kategori=="Pembunuhan") echo "selected"; ?>>Pembunuhan</option>
-          <option value="Pencurian" <?php if($sub_kategori=="Pencurian") echo "selected"; ?>>Pencurian</option>
+          <option value="Perceraian" <?php if($sub_kategori=="Perceraian") echo "selected"; ?>>Perceraian</option>
+          <option value="Hak Asuh Anak" <?php if($sub_kategori=="Hak Asuh Anak") echo "selected"; ?>>Hak Asuh Anak</option>
+          <option value="Harta Gono-Gini" <?php if($sub_kategori=="Harta Gono-Gini") echo "selected"; ?>>Harta Gono-Gini</option>
+          <option value="Wasiat & Warisan" <?php if($sub_kategori=="Wasiat & Warisan") echo "selected"; ?>>Wasiat & Warisan</option>
+          <option value="Perwalian" <?php if($sub_kategori=="Perwalian") echo "selected"; ?>>Perwalian</option>
         </select>
       </div>
 
@@ -153,23 +141,26 @@ document.addEventListener("DOMContentLoaded", function () {
   <main class="md:col-span-3 space-y-4">
     <h2 class="text-gray-600">Menampilkan <span class="text-blue-700 font-bold">
       <?php echo $result->num_rows; ?>
-    </span> Layanan Hukum keluarga</h2>
+    </span> Layanan Hukum Keluarga</h2>
 
     <?php while($row = $result->fetch_assoc()): ?>
     <div class="bg-white rounded shadow p-4 flex flex-col md:flex-row gap-4">
-     <img src="../../uploads/<?php echo $row['gambar']; ?>" 
-     alt="<?php echo $row['nama_produk']; ?>" 
+     <img src="../../uploads/<?php echo htmlspecialchars($row['gambar']); ?>" 
+     alt="<?php echo htmlspecialchars($row['nama_produk']); ?>" 
      class="w-full md:w-48 h-32 object-cover rounded">
 
       <div class="flex flex-col justify-between flex-1">
         <div>
-          <span class="text-blue-700 font-bold uppercase text-sm"><?php echo $row['sub_kategori']; ?> - <?php echo $row['lokasi']; ?></span>
-          <h3 class="font-bold text-lg"><?php echo $row['nama_produk']; ?></h3>
-          <p class="text-gray-700"><?php echo $row['deskripsi']; ?></p>
+          <span class="text-blue-700 font-bold uppercase text-sm"><?php echo htmlspecialchars($row['sub_kategori']); ?> - <?php echo htmlspecialchars($row['lokasi']); ?></span>
+          <h3 class="font-bold text-lg"><?php echo htmlspecialchars($row['nama_produk']); ?></h3>
+          <p class="text-gray-700 line-clamp-3"><?php echo htmlspecialchars($row['deskripsi']); ?></p>
         </div>
         <div class="flex justify-between items-center mt-2">
           <span class="text-blue-800 font-bold">Rp <?php echo number_format($row['harga'],0,',','.'); ?></span>
-          <a href="#" class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded">Lihat Layanan</a>
+          <a href="../../detail-toko.php?id=<?php echo $row['id']; ?>&from=keluarga" 
+             class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded">
+             Lihat Layanan
+          </a>
         </div>
       </div>
     </div>

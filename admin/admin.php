@@ -36,12 +36,31 @@ if (isset($_GET['hapus_user'])) {
   
 <nav class="bg-white shadow p-4 mb-6">
   <div class="max-w-6xl mx-auto flex justify-between items-center">
-    <h1 class="text-xl font-bold text-blue-700">Admin Panel</h1>
-    <a href="tambah-pengacara.php" class="text-blue-600 hover:underline">Tambah Pengacara</a>
-    <a href="admin-berita.php" class="text-blue-600 hover:underline">Panel Berita</a>
-    <a href="admin-toko-hukum.php" class="text-blue-600 hover:underline">Panel Toko</a>
+    
+    <!-- Judul kiri -->
+    <h1 class="text-lg font-bold text-blue-700">Admin Panel</h1>
+    
+    <!-- Menu kanan -->
+    <div class="flex items-center space-x-3">
+      <a href="tambah-pengacara.php" class="text-gray-700 hover:text-blue-600 text-sm">Tambah Pengacara</a>
+      <a href="admin-berita.php" class="text-gray-700 hover:text-blue-600 text-sm">Panel Berita</a>
+      <a href="admin-toko-hukum.php" class="text-gray-700 hover:text-blue-600 text-sm">Panel Toko</a>
+      <a href="panel-laporan.php" class="text-gray-700 hover:text-blue-600 text-sm">Panel Laporan</a>
+
+      <!-- Tombol kembali -->
+      <a href="../hukum.php" class="bg-green-600 text-white text-xs px-3 py-1.5 rounded hover:bg-green-700 transition">
+        ← Kembali
+      </a>
+
+      <!-- Tombol logout -->
+      <a href="../logout.php" class="bg-red-600 text-white text-xs px-3 py-1.5 rounded hover:bg-red-700 transition">
+        Logout
+      </a>
+    </div>
   </div>
 </nav>
+
+
 
 <div class="max-w-4xl mx-auto bg-white p-6 rounded shadow">
   <h2 class="text-2xl font-bold mb-6 text-blue-700">Data Admin</h2>

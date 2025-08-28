@@ -8,23 +8,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email']);
     $pass  = $_POST['password'];
 
+    // cek user berdasarkan email
     $stmt = $conn->prepare('SELECT id, name, password, role FROM users WHERE email = ? LIMIT 1');
     $stmt->bind_param('s', $email);
     $stmt->execute();
     $result = $stmt->get_result();
     $user = $result->fetch_assoc();
 
+    // verifikasi password
     if ($user && password_verify($pass, $user['password'])) {
-        // simpan session
+        // simpan data penting ke session
         $_SESSION['user_id']   = $user['id'];
-        $_SESSION['user_name'] = $user['name'];
+        $_SESSION['user_name'] = $user['name']; // ← selalu pakai ini
         $_SESSION['role']      = $user['role'];
 
         // redirect sesuai role
         if ($user['role'] === 'admin') {
             header('Location: admin/admin.php');
         } else {
-            header('Location: hukum.php'); // untuk user biasa
+            header('Location: hukum.php');
         }
         exit;
     } else {
@@ -37,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/x-icon" href="asset/brachmastra.png">
+<link rel="icon" type="image/x-icon" href="asset/brachmastra.png">
 <title>Login - BRACHMASTRA</title>
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>

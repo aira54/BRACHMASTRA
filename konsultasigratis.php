@@ -27,13 +27,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body class="bg-white text-gray-800">
 
 <!-- Navigasi -->
+<!-- Navigasi -->
 <nav class="bg-white shadow p-4">
-  <div class="max-w-6xl mx-auto flex justify-between items-center">
-    <a href="hukum.php" class="text-xl font-semibold text-blue-700">BRACHMASTRA</a>
-    <div>
-      <a href="hukum.php" class="text-sm text-gray-700 hover:text-blue-600 font-medium px-4">Beranda</a>
-      <a href="pengacara.php" class="text-sm text-blue-600 font-semibold px-4">Cari Pengacara</a>
+  <div class="max-w-7xl mx-auto flex justify-between items-center">
+    
+    <!-- Kiri: Menu -->
+    <div class="flex items-center space-x-8">
+      <a href="hukum.php" class="text-lg font-bold text-blue-700">BRACHMASTRA</a>
+      <a href="hukum.php" class="text-gray-700 hover:text-blue-600 text-sm">Beranda</a>
+      <a href="pengacara.php" class="text-gray-700 hover:text-blue-600 text-sm">Pengacara</a>
+      <a href="konsultasi.php" class="text-gray-700 hover:text-blue-600 text-sm">Konsultasi</a>
+      <a href="tentang-kami.html" class="text-gray-700 hover:text-blue-600 text-sm">Tentang Kami</a>
     </div>
+
+    <!-- Kanan: Tombol kembali -->
+    <div>
+      <a href="hukum.php" class="bg-red-600 text-white text-sm px-4 py-2 rounded hover:bg-red-700 transition">
+        Kembali
+      </a>
+    </div>
+
   </div>
 </nav>
 
