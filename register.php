@@ -8,23 +8,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email']);
     $pass  = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-    $stmt = $conn->prepare("INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, 'user')");
-    $stmt->bind_param("sss", $name, $email, $pass);
+    // 🔎 Cek apakah email sudah ada
+    $cek = $conn->prepare("SELECT id FROM users WHERE email = ?");
+    $cek->bind_param("s", $email);
+    $cek->execute();
+    $cek->store_result();
 
-    if ($stmt->execute()) {
-        // Ambil ID user yang baru dibuat
-        $user_id = $stmt->insert_id;
-
-        // Simpan ke session agar langsung login
-        $_SESSION['user_id']   = $user_id;
-        $_SESSION['user_name'] = $name;
-        $_SESSION['role']      = 'user';
-
-        // Arahkan ke halaman utama
-        header("Location: index.php");
-        exit;
+    if ($cek->num_rows > 0) {
+        $errors[] = "Email sudah digunakan, silakan login atau pakai email lain.";
     } else {
-        $errors[] = "Gagal registrasi, mungkin email sudah digunakan.";
+        // 🚀 Insert user baru
+        $stmt = $conn->prepare("INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, 'user')");
+        $stmt->bind_param("sss", $name, $email, $pass);
+
+        if ($stmt->execute()) {
+            $user_id = $stmt->insert_id;
+
+            $_SESSION['user_id']   = $user_id;
+            $_SESSION['user_name'] = $name;
+            $_SESSION['role']      = 'user';
+
+            header("Location: index.php");
+            exit;
+        } else {
+            $errors[] = "Terjadi kesalahan saat registrasi.";
+        }
     }
 }
 ?>
@@ -33,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/x-icon" href="asset/brachmastra.png">
+<link rel="icon" type="image/x-icon" href="asset/brachmastra.png">
 <title>Register - BRACHMASTRA</title>
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>

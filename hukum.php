@@ -1,136 +1,4 @@
-<?php session_start(); ?>
-<!DOCTYPE html>
-<html lang="id">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Brachmastra</title>
-  <link rel="icon" type="image/x-icon" href="asset/brachmastra.png">
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    body { font-family: 'Poppins', sans-serif; }
-    #page-loader { display: none; position: fixed; z-index: 9999; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); justify-content: center; align-items: center; }
-    .scale-icon { width: 80px; height: 80px; animation: swing 1s ease-in-out infinite; }
-    @keyframes swing { 0% { transform: rotate(-10deg); } 50% { transform: rotate(10deg);} 100% { transform: rotate(-10deg);} }
-  </style>
-</head>
-
-<body class="bg-white text-gray-800">
-
-<!-- Loader -->
-<div id="page-loader">
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" class="scale-icon" fill="#2563eb">
-      <path d="M32 2l8 16h-4v10h-8V18h-4l8-16zM14 30l6-12 6 12H14zm24 0l6-12 6 12H38zM8 32h12v2c0 5-4 9-9 9H9c-5 0-9-4-9-9v-2h8zm36 0h12v2c0 5-4 9-9 9h-1c-5 0-9-4-9-9v-2h8zm-12 4c4 0 7 3 7 7v19h-14V43c0-4 3-7 7-7z"/>
-  </svg>
-</div>
-
-<!-- Modal Login -->
-<div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
-  <div class="bg-white rounded-xl shadow-lg max-w-md w-full p-6 text-center">
-    <h2 class="text-xl font-bold text-gray-800 mb-4">⚠️ Akses Ditolak</h2>
-    <p class="text-gray-600 mb-6">Silakan <span class="font-semibold text-blue-600">Login</span> atau <span class="font-semibold text-blue-600">Registrasi</span> untuk melanjutkan.</p>
-    <div class="flex justify-center space-x-4">
-      <a href="login.php" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Login</a>
-      <a href="register.php" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">Registrasi</a>
-      <button onclick="closeModal()" class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400">Batal</button>
-    </div>
-  </div>
-</div>
-
-<!-- Navbar -->
-<nav class="bg-white shadow p-4">
-  <div class="max-w-7xl mx-auto flex justify-between items-center">
-    
-    <!-- Kiri: Logo / Brand -->
-    <div class="flex items-center space-x-8">
-      <a href="hukum.php" class="text-lg font-bold text-blue-700">BRACHMASTRA</a>
-      <a href="hukum.php" class="text-gray-700 hover:text-blue-600">Beranda</a>
-      <a href="pengacara.php" class="text-gray-700 hover:text-blue-600">Pengacara</a>
-      <a href="konsultasi.php" class="text-gray-700 hover:text-blue-600">Konsultasi</a>
-      <a href="tentang-kami.html" class="text-gray-700 hover:text-blue-600">Tentang Kami</a>
-    </div>
-
-    <!-- Kanan: User Info -->
-    <div class="flex items-center space-x-4">
-      <?php if (isset($_SESSION['user_id'])): ?>
-        <?php if ($_SESSION['role'] === 'admin'): ?>
-          <a href="admin/admin.php" class="bg-yellow-500 text-white px-3 py-1 rounded text-sm hover:bg-yellow-600">Admin Panel</a>
-        <?php endif; ?>
-        
-        <span class="text-sm text-gray-600">Halo, <span class="font-semibold"><?= htmlspecialchars($_SESSION['user_name']) ?></span></span>
-        <a href="logout.php" class="bg-red-500 text-white text-sm px-3 py-1 rounded hover:bg-red-600 transition">Logout</a>
-      <?php else: ?>
-        <a href="login.php" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700">Login</a>
-      <?php endif; ?>
-    </div>
-
-  </div>
-</nav>
-
-
-
-
-<!-- =============================== -->
-<!-- Seluruh isi halaman kamu tetap -->
-<!-- =============================== -->
-
-<!-- Script Loader + Modal -->
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const isLoggedIn = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
-
-    document.querySelectorAll("a").forEach(function (link) {
-        link.addEventListener("click", function (e) {
-            const url = this.getAttribute("href");
-
-            // Skip anchor kosong
-            if (!url || url === "#" || url.startsWith("javascript:")) return;
-
-            // pengecualian: link kontak & lokasi (selalu bisa diakses)
-            const bebasLogin = (
-                url.startsWith("mailto:") ||
-                url.startsWith("tel:") ||
-                url.includes("instagram.com") ||
-                url.includes("facebook.com") ||
-                url.includes("hukum.php") ||
-                url.includes("google.com/maps")
-            );
-
-            // jika belum login dan link bukan pengecualian
-            if (!isLoggedIn && !bebasLogin && !url.includes("login.php") && !url.includes("register.php")) {
-                e.preventDefault();
-                openModal();
-            } else {
-                // tampilkan loader lalu lanjutkan
-                e.preventDefault();
-                document.getElementById("page-loader").style.display = "flex";
-                setTimeout(function () {
-                    window.location.href = url;
-                }, 500);
-            }
-        });
-    });
-});
-
-function openModal() {
-    document.getElementById("loginModal").classList.remove("hidden");
-    document.getElementById("loginModal").classList.add("flex");
-}
-function closeModal() {
-    document.getElementById("loginModal").classList.remove("flex");
-    document.getElementById("loginModal").classList.add("hidden");
-}
-</script>
-
-
-
-
-
-
-
-
+<?php include 'includes/header.php'; ?>
  
  <!-- Hero Section -->
 <section class="bg-gray-50 py-20">
@@ -139,7 +7,7 @@ function closeModal() {
     <div class="md:w-1/2 mb-10 md:mb-0">
       <h1 class="text-4xl md:text-5xl font-bold text-gray-800 leading-tight mb-4">Konsultasi Hukum dalam Genggaman</h1>
       <h2 class="text-lg text-blue-700 font-semibold mb-3">Aman dan Terpercaya.</h2>
-      <p class="text-gray-600 mb-6">Dapatkan solusi hukum dari pengacara profesional, kapan saja dan di mana saja. Proses mudah, cepat, dan dijamin privasi Anda.</p>
+      <p class="text-gray-600 mb-6">Dapatkan kontak dari pengacara profesional dan konsultasi, kapan saja dan di mana saja. Proses mudah, cepat, dan dijamin privasi Anda.</p>
       <div class="space-x-4">
         <div class="flex flex-col sm:flex-row gap-4">
   <a href="konsultasigratis.php" class="bg-blue-700 text-white px-6 py-3 rounded-lg hover:bg-blue-800 transition text-center">
@@ -239,7 +107,7 @@ function closeModal() {
         </div>
         <div>
           <h3 class="text-lg font-semibold">Konsultasi Di Mana Aja</h3>
-          <p class="text-gray-600 text-sm">Konsultasi hukum secara online 24 jam melalui chat di mana saja dan kapan saja.</p>
+          <p class="text-gray-600 text-sm">Konsultasi hukum secara online 24 jam melalui chat Whatsapp di mana saja dan kapan saja.</p>
         </div>
       </div>
       <!-- Fitur 2 -->
@@ -371,43 +239,51 @@ function fetchReply(message) {
 </section>
 
 
-  <!-- Berita & Testimoni -->
-  <section class="py-16 bg-gray-50">
-    <div class="max-w-6xl mx-auto px-4">
-      <h3 class="text-2xl font-semibold text-center mb-10">Berita & Testimoni</h3>
-      <div class="grid md:grid-cols-3 gap-6">
-        <!-- Testimoni 1 -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <img src="asset/fasilitas-kantor.webp" alt="Testimoni Andi"
-            class="rounded-md mb-4 w-full object-cover">
-        
-          <h4 class="text-lg font-semibold text-blue-700 mb-2">"Pelayanan cepat dan terpercaya!"</h4>
-          <p class="text-gray-600 text-sm">Saya sempat bingung soal kasus warisan, dan BRACHMASTRA membantu saya
-            menemukan pengacara yang tepat dalam waktu 1 hari.</p>
-             <a href="#" class="text-blue-600 text-sm mt-2 inline-block hover:underline">Lihat</a>
-          <p class="text-gray-500 text-xs mt-2">- Rina, Jakarta</p>
+<!-- Berita & Testimoni -->
+<section class="py-10 bg-gray-50">
+  <div class="max-w-6xl mx-auto px-4">
+    <h2 class="text-2xl font-bold text-center mb-8"> Testimoni Seputar Brachmastra</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <?php
+      $conn = new mysqli("localhost", "root", "", "brachmastra");
+
+      // ambil 6 berita terbaru
+      $result = $conn->query("SELECT id, judul, isi, gambar, kategori, tanggal 
+                              FROM berita 
+                              ORDER BY tanggal DESC 
+                              LIMIT 6");
+
+      if ($result && $result->num_rows > 0):
+          while ($row = $result->fetch_assoc()):
+      ?>
+        <div class="bg-white shadow rounded-lg p-4 hover:shadow-lg transition">
+          <?php if (!empty($row['gambar'])): ?>
+            <img src="uploads/<?= htmlspecialchars($row['gambar']); ?>" 
+                 alt="Gambar Berita" 
+                 class="w-full h-40 object-cover rounded mb-4">
+          <?php endif; ?>
+
+          <h3 class="text-lg font-semibold text-blue-700 mb-2">
+            <?= htmlspecialchars($row['judul']); ?>
+          </h3>
+          <p class="text-gray-600 text-sm mb-3">
+            <?= htmlspecialchars(substr(strip_tags($row['isi']), 0, 100)) . '...'; ?>
+          </p>
+          <a href="detail-berita.php?id=<?= $row['id']; ?>&from=<?= urlencode($row['kategori']); ?>" 
+             class="text-blue-600 hover:underline text-sm">Baca Selengkapnya</a>
         </div>
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <img src="asset/1755663464_Screenshot 2025-07-31 225351.png" alt="Testimoni Andi"
-            class="rounded-md mb-4 w-full object-cover">
-        
-          <h4 class="text-lg font-semibold text-blue-700 mb-2">Artikel: Mengenal Jalur Hukum Perdata</h4>
-          <p class="text-gray-600 text-sm">Simak penjelasan dasar mengenai hukum perdata dan kapan sebaiknya kamu
-            menggunakan jalur ini.</p>
-          <a href="https://www.bing.com/search?q=sastra%20brachmastra%20yudha&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=sastra%20brachmastra%20yudha&sc=11-24&sk=&cvid=F09F3FA983B14EAA962EF768E05FA246" class="text-blue-600 text-sm mt-2 inline-block hover:underline">Baca Selengkapnya</a>
-        </div>
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <img src="asset/1755752833_Screenshot 2025-07-31 225358.png" alt="Testimoni Andi"
-            class="rounded-md mb-4 w-full object-cover">
-          
-          <h4 class="text-lg font-semibold text-blue-700 mb-2">"Pengalaman menyewa pengacara sangat mudah!"</h4>
-          <p class="text-gray-600 text-sm">Dengan fitur sewa pengacara, saya bisa langsung jadwalkan konsultasi dan
-            semuanya transparan.</p>
-          <p class="text-gray-500 text-xs mt-2">- Andi, Bandung</p>
-        </div>
-      </div>
+      <?php 
+          endwhile;
+      else: 
+      ?>
+        <p class="col-span-3 text-center text-gray-500">Belum ada berita tersedia.</p>
+      <?php endif; ?>
     </div>
-  </section>
+  </div>
+</section>
+
+
 
   <footer class="bg-gray-100 py-10 mt-10 text-center text-gray-700 text-sm">
   <div class="max-w-6xl mx-auto px-4">

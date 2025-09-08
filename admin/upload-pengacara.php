@@ -1,53 +1,41 @@
 <?php
 require '../db.php';
 
-// Hapus pengacara
-if (isset($_GET['hapus'])) {
-  $id = (int) $_GET['hapus'];
-  $conn->query("DELETE FROM pengacara WHERE id = $id");
-  header("Location: admin.php");
-  exit;
-}
+$id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 
-// Tambah pengacara
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tambah'])) {
-  $nama = $_POST['nama'];
-  $spesialis = $_POST['spesialis'];
-  $tipe_konsultasi = $_POST['tipe_konsultasi'];
-  $deskripsi = $_POST['deskripsi'];
+// Ambil data lama
+$stmt = $conn->prepare("SELECT * FROM pengacara WHERE id = ?");
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$result = $stmt->get_result();
+$data = $result->fetch_assoc();
 
-  $foto = '';
-  $upload_dir = '../uploads/';
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $nama = $_POST['nama'];
+    $spesialis = $_POST['spesialis'];
+    $email = $_POST['email'];
+    $telepon = $_POST['telepon'];
+    $tipe = $_POST['tipe_konsultasi'];
+    $deskripsi = $_POST['deskripsi'];
+    $pendidikan = $_POST['pendidikan'];
 
-  // Pastikan folder uploads/ ada
-  if (!is_dir($upload_dir)) {
-    mkdir($upload_dir, 0777, true);
-  }
+    $fotoPath = $data['foto']; // default foto lama
 
-  // Jika upload file
-  if (!empty($_FILES['foto']['name'])) {
-    $foto_nama = basename($_FILES['foto']['name']);
-    $foto_tmp = $_FILES['foto']['tmp_name'];
-    $foto_path = $upload_dir . $foto_nama;
-
-    if (move_uploaded_file($foto_tmp, $foto_path)) {
-      $foto = 'uploads/' . $foto_nama;
-    } else {
-      echo "Gagal mengupload foto.";
-      exit;
+    if (!empty($_FILES['foto']['name'])) {
+        $fotoName = time() . '_' . $_FILES['foto']['name'];
+        $tmp = $_FILES['foto']['tmp_name'];
+        $folder = '../uploads/' . $fotoName;
+        $fotoPath = 'uploads/' . $fotoName;
+        move_uploaded_file($tmp, $folder);
     }
 
-  // Jika pakai link
-  } elseif (!empty($_POST['foto_link'])) {
-    $foto = $_POST['foto_link'];
-  }
+    $stmt = $conn->prepare("UPDATE pengacara 
+        SET nama=?, spesialis=?, email=?, telepon=?, tipe_konsultasi=?, deskripsi=?, pendidikan=?, foto=? 
+        WHERE id=?");
+    $stmt->bind_param("ssssssssi", $nama, $spesialis, $email, $telepon, $tipe, $deskripsi, $pendidikan, $fotoPath, $id);
+    $stmt->execute();
 
-  // Simpan ke database
-  $stmt = $conn->prepare("INSERT INTO pengacara (nama, foto, spesialis, tipe_konsultasi, deskripsi) VALUES (?, ?, ?, ?, ?)");
-  $stmt->bind_param("sssss", $nama, $foto, $spesialis, $tipe_konsultasi, $deskripsi);
-  $stmt->execute();
-
-  header("Location: admin.php?success=1");
-  exit;
+    header("Location: admin.php?update=success");
+    exit;
 }
 ?>
