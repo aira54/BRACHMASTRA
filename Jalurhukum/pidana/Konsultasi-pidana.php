@@ -8,16 +8,9 @@ $queryBerbayar = "SELECT * FROM pengacara WHERE spesialis = 'Hukum Pidana' AND t
 $resultGratis = $conn->query($queryGratis);
 $resultBerbayar = $conn->query($queryBerbayar);
 ?>
-<link rel="icon" type="image/x-icon" href="../../asset/brachmastra.png">
-<script src="https://cdn.tailwindcss.com"></script>
-<nav class="bg-white shadow p-4">
-  <div class="max-w-6xl mx-auto flex justify-between items-center">
-    <a href="../../hukum.php" class="text-xl font-semibold text-blue-700">BRACHMASTRA</a>
-    <div>
-      <a href="pidana.php" class="text-sm text-gray-700 hover:text-blue-600 font-medium px-4">Kembali</a>
-    </div>
-  </div>
-</nav>
+<head>
+    <?php include '../../includes/header.php'; ?>
+</head>
 
 <div class="mt-12 px-4 max-w-6xl mx-auto">
   <h2 class="text-2xl font-bold mb-6 text-center">Konsultasi Hukum Pidana</h2>

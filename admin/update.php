@@ -26,30 +26,60 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $tipe       = $_POST['tipe_konsultasi'];
     $deskripsi  = $_POST['deskripsi'];
     $pendidikan = $_POST['pendidikan'];
-    $harga      = (int) $_POST['harga_konsultasi']; // ✅ ambil harga dari form
+    $harga      = (int) $_POST['harga_konsultasi']; // integer
 
     // Default pakai foto lama
     $fotoPath = $pengacara['foto'];
 
     // Update foto jika ada upload baru
     if (!empty($_FILES['foto']['name'])) {
-        $fotoName = time() . '_' . $_FILES['foto']['name'];
-        $tmp      = $_FILES['foto']['tmp_name'];
-        $folder   = '../uploads/' . $fotoName;
-        $fotoPath = 'uploads/' . $fotoName;
-        move_uploaded_file($tmp, $folder);
-    }
+    $fotoName = time() . '_' . basename($_FILES['foto']['name']);
+    $tmp      = $_FILES['foto']['tmp_name'];
 
+    // Lokasi fisik untuk menyimpan file
+    $targetDir  = __DIR__ . '/../uploads/';   // __DIR__ = admin
+    $targetFile = $targetDir . $fotoName;
+
+    if (move_uploaded_file($tmp, $targetFile)) {
+        // ✅ Simpan path relatif dari root web (bukan ../)
+        $fotoPath = 'uploads/' . $fotoName;
+    } else {
+        echo "<p style='color:red;'>Upload foto gagal!</p>";
+    }
+}
+
+
+    // Query update
     $update = $conn->prepare("UPDATE pengacara 
         SET nama=?, spesialis=?, email=?, telepon=?, tipe_konsultasi=?, deskripsi=?, pendidikan=?, harga_konsultasi=?, foto=? 
         WHERE id=?");
-    $update->bind_param("ssssssssis", $nama, $spesialis, $email, $telepon, $tipe, $deskripsi, $pendidikan, $harga, $fotoPath, $id);
-    $update->execute();
 
-    header("Location: admin.php?update=success");
-    exit;
+    if (!$update) {
+        die("Prepare failed: " . $conn->error);
+    }
+
+    // ✅ binding tipe data sudah benar
+    $update->bind_param(
+        "sssssssisi", 
+        $nama, 
+        $spesialis, 
+        $email, 
+        $telepon, 
+        $tipe, 
+        $deskripsi, 
+        $pendidikan, 
+        $harga,      // i
+        $fotoPath,   // s
+        $id          // i
+    );
+
+    if ($update->execute()) {
+        header("Location: pengacara-user.php?update=success");
+        exit;
+    } else {
+        echo "<p style='color:red;'>Gagal update: " . $update->error . "</p>";
+    }
 }
-
 ?>
 
 
@@ -57,8 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-     <link rel="icon" type="image/x-icon" href="../asset/admin.png">
-
+  <link rel="icon" type="image/x-icon" href="../asset/admin.png">
   <title>Edit Pengacara</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -70,30 +99,26 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <label class="block mb-1">Nama</label>
         <input name="nama" value="<?= htmlspecialchars($pengacara['nama']) ?>" required class="w-full border px-3 py-2 rounded">
       </div>
+
       <div class="mb-4">
         <label class="block mb-1">Spesialis</label>
         <input name="spesialis" value="<?= htmlspecialchars($pengacara['spesialis']) ?>" required class="w-full border px-3 py-2 rounded">
       </div>
+
       <div class="mb-4">
-  <label class="block mb-1">Email</label>
-  <input type="email" name="email" 
-    value="<?= htmlspecialchars($pengacara['email'] ?? '') ?>" 
-    class="w-full border px-3 py-2 rounded">
-</div>
+        <label class="block mb-1">Email</label>
+        <input type="email" name="email" value="<?= htmlspecialchars($pengacara['email'] ?? '') ?>" class="w-full border px-3 py-2 rounded">
+      </div>
 
-<div class="mb-4">
-  <label class="block mb-1">Telepon</label>
-  <input type="text" name="telepon" 
-    value="<?= htmlspecialchars($pengacara['telepon'] ?? '') ?>" 
-    class="w-full border px-3 py-2 rounded">
-</div>
-<div class="mb-4">
-  <label class="block mb-1">Pendidikan</label>
-  <input type="text" name="pendidikan" 
-    value="<?= htmlspecialchars($pengacara['pendidikan'] ?? '') ?>" 
-    class="w-full border px-3 py-2 rounded">
-</div>
+      <div class="mb-4">
+        <label class="block mb-1">Telepon</label>
+        <input type="text" name="telepon" value="<?= htmlspecialchars($pengacara['telepon'] ?? '') ?>" class="w-full border px-3 py-2 rounded">
+      </div>
 
+      <div class="mb-4">
+        <label class="block mb-1">Pendidikan</label>
+        <input type="text" name="pendidikan" value="<?= htmlspecialchars($pengacara['pendidikan'] ?? '') ?>" class="w-full border px-3 py-2 rounded">
+      </div>
 
       <div class="mb-4">
         <label class="block mb-1">Tipe Konsultasi</label>
@@ -102,21 +127,27 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
           <option value="berbayar" <?= $pengacara['tipe_konsultasi'] === 'berbayar' ? 'selected' : '' ?>>Berbayar</option>
         </select>
       </div>
+
       <div class="mb-4">
-  <label class="block mb-1">Harga Konsultasi (Rp)</label>
-  <input type="number" name="harga_konsultasi" min="0" 
-    value="<?= htmlspecialchars($pengacara['harga_konsultasi']) ?>" 
-    class="w-full border px-3 py-2 rounded">
-</div>
+        <label class="block mb-1">Harga Konsultasi (Rp)</label>
+        <input type="number" name="harga_konsultasi" min="0" value="<?= htmlspecialchars($pengacara['harga_konsultasi']) ?>" class="w-full border px-3 py-2 rounded">
+      </div>
 
       <div class="mb-4">
         <label class="block mb-1">Deskripsi</label>
         <textarea name="deskripsi" rows="4" required class="w-full border px-3 py-2 rounded"><?= htmlspecialchars($pengacara['deskripsi']) ?></textarea>
       </div>
+
       <div class="mb-4">
-        <label class="block mb-1">Foto (jika ingin mengganti)</label>
+        <label class="block mb-1">Foto saat ini</label><br>
+        <img src="<?= htmlspecialchars($pengacara['foto']) ?>" alt="Foto Pengacara" width="120" class="mb-2 rounded border">
+      </div>
+
+      <div class="mb-4">
+        <label class="block mb-1">Foto baru (jika ingin mengganti)</label>
         <input type="file" name="foto" accept="image/*" class="w-full border px-3 py-2 rounded bg-white">
       </div>
+
       <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">Simpan Perubahan</button>
     </form>
   </div>

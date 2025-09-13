@@ -42,13 +42,13 @@ $konsultasi_gratis    = $conn->query("SELECT COUNT(*) AS total FROM pengacara WH
 
         <!-- Layanan -->
         <div class="bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-2xl shadow p-6">
-            <p class="text-sm opacity-80">Layanan</p>
+            <p class="text-sm opacity-80"> Layanan</p>
             <h3 class="text-2xl font-bold"><?= $layanan_count; ?></h3>
         </div>
 
         <!-- Konsultasi -->
         <div class="bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-2xl shadow p-6">
-            <p class="text-sm opacity-80">Konsultasi</p>
+            <p class="text-sm opacity-80">Pengguna Konsultasi</p>
             <h3 class="text-2xl font-bold"><?= $konsultasi_count; ?></h3>
         </div>
 

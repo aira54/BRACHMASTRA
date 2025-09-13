@@ -2,25 +2,18 @@
 include __DIR__ . '/../../db.php';
 
 // Ambil pengacara gratis & berbayar khusus hukum pidana
-$queryGratis = "SELECT * FROM pengacara WHERE spesialis = 'Hukum Perdata' AND tipe_konsultasi = 'gratis'";
-$queryBerbayar = "SELECT * FROM pengacara WHERE spesialis = 'Hukum Perdata' AND tipe_konsultasi = 'berbayar'";
+$queryGratis = "SELECT * FROM pengacara WHERE spesialis = 'Hukum perdata' AND tipe_konsultasi = 'gratis'";
+$queryBerbayar = "SELECT * FROM pengacara WHERE spesialis = 'Hukum perdata' AND tipe_konsultasi = 'berbayar'";
 
 $resultGratis = $conn->query($queryGratis);
 $resultBerbayar = $conn->query($queryBerbayar);
 ?>
-<link rel="icon" type="image/x-icon" href="../../asset/brachmastra.png">
-<script src="https://cdn.tailwindcss.com"></script>
-<nav class="bg-white shadow p-4">
-  <div class="max-w-6xl mx-auto flex justify-between items-center">
-    <a href="../../hukum.php" class="text-xl font-semibold text-blue-700">BRACHMASTRA</a>
-    <div>
-      <a href="perdata.php" class="text-sm text-gray-700 hover:text-blue-600 font-medium px-4">Kembali</a>
-    </div>
-  </div>
-</nav>
+<head>
+    <?php include '../../includes/header.php'; ?>
+</head>
 
 <div class="mt-12 px-4 max-w-6xl mx-auto">
-  <h2 class="text-2xl font-bold mb-6 text-center">Konsultasi Hukum Perdata</h2>
+  <h2 class="text-2xl font-bold mb-6 text-center">Konsultasi Hukum perdata</h2>
 
   <!-- Pengacara Gratis -->
   <h3 class="text-xl font-bold text-blue-600 mb-4">Konsultasi Gratis</h3>

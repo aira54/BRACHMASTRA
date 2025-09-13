@@ -31,8 +31,11 @@ switch ($from) {
     case 'bisnis':
         $backLink = "jalurhukum/bisnis/berita-bisnis.php";
         break;
+        case 'umum':
+        $backLink = "hukum.php";
+        break;
     default:
-        $backLink = "index.php"; // fallback kalau tidak ada
+        $backLink = "hukum.php"; // fallback kalau tidak ada
         break;
 }
 ?>

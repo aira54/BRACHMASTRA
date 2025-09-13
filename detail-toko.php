@@ -23,7 +23,8 @@ switch ($from) {
     case 'perdata':  $backLink = "jalurhukum/perdata/toko-hukum-perdata.php"; break;
     case 'keluarga': $backLink = "jalurhukum/keluarga/toko-hukum-keluarga.php"; break;
     case 'bisnis':   $backLink = "jalurhukum/bisnis/toko-hukum-bisnis.php"; break;
-    default:         $backLink = "index.php"; break;
+    case 'umum':   $backLink = "layanan.php"; break;
+    default:         $backLink = "layanan.php"; break;
 }
 ?>
 <?php include 'includes/header.php'; ?>
@@ -181,7 +182,7 @@ function submitConsult(){
               `Produk: ${produk}\nKategori: ${kategori}\nHarga: ${harga}\n\n` +
               `Kasus: ${pesan}`;
 
-    let noAdmin = "6285733383387";
+    let noAdmin = "+628998379922";
     let url = "https://wa.me/" + noAdmin + "?text=" + encodeURIComponent(msg);
 
     closePopup();
