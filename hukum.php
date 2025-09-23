@@ -108,7 +108,7 @@
 <!-- Berita & Testimoni -->
 <section class="py-16 bg-gray-50">
   <div class="max-w-6xl mx-auto px-4">
-    <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Testimoni Seputar Brachmastra</h2>
+    <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Seputar Brachmastra</h2>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
       <?php
       $conn = new mysqli("localhost", "root", "", "brachmastra");

@@ -40,7 +40,7 @@ if(!isset($_SESSION['user_id'])) {
 
     <!-- Image -->
     <div class="flex justify-center">
-      <img src="asset/hero-law.png" alt="Konsultasi Hukum" class="rounded-xl shadow-lg w-full max-w-md">
+      <img src="asset/logo2.png" alt="Konsultasi Hukum" class="rounded-xl shadow-lg w-full max-w-md">
     </div>
   </div>
 </section>
