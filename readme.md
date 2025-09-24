@@ -16,9 +16,6 @@
 - **Konsultasi Gratis & Berbayar**  
   Pengacara dikategorikan berdasarkan tipe konsultasi (gratis atau berbayar).
 
-- **Form Registrasi Konsultasi**  
-  Pengguna dapat mendaftar untuk konsultasi dengan mengisi nama lengkap, email, dan nomor telepon.
-
 - **Deskripsi & Profil Pengacara**  
   Setiap pengacara memiliki profil detail yang dapat diakses oleh pengguna.
 
@@ -27,10 +24,18 @@
 ```
 BRACHMASTRA/
 ├── admin/
+    └──includes/
+            └──header-admin.php
+              footer-admin.php
+      admin-berita.php
+      admin-toko-hukum.php
+          ----
 ├── asset/
 ├── includes/
 │   └── header.php
+        footer.php
 ├── Jalurhukum/
+       └── pidana/
 ├── konsultasi.php
 ├── konsultasigratis.php
 ├── Login.php
@@ -41,16 +46,6 @@ BRACHMASTRA/
 ├── readme.md
 └── ...
 ```
-
-## Database
-
-### Tabel `pengacara`
-| id | nama | foto | spesialis | deskripsi | tipe_konsultasi |
-|----|------|------|-----------|-----------|-----------------|
-
-### Tabel `registrasi_konsultasi`
-| id | nama_lengkap | email | no_telepon | created_at |
-|----|--------------|-------|------------|------------|
 
 ## Cara Menjalankan
 
@@ -65,9 +60,9 @@ Proyek ini dibuat untuk keperluan edukasi dan pengembangan aplikasi konsultasi h
 🛠️ Teknologi yang Digunakan
 
 - PHP 8.x
-- MySQL / MariaDB
+- MySQL 
 - TailwindCSS
-- Laragon / XAMPP
+- Laragon 
 
 📸 Preview
 
@@ -95,3 +90,13 @@ Proyek ini dibuat untuk keperluan edukasi dan pengembangan aplikasi konsultasi h
 ## 🗂️ Flowchart Alur Sistem
 
 ![flowchart](/docs/Pengantar%20Konsultasi%20Brachmastra.drawio.png)
+
+---
+
+## 🗂️ UI Figma 
+
+https://www.figma.com/design/vQQ3KVjKucHGwm6ESrbwJo/TA-BRACHMASTRA?node-id=0-1&t=1UP0W2QPfKxH498T-1
+
+---
+
+![UI](docs/UI%20by%20Figma.png)
